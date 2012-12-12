@@ -1,157 +1,314 @@
 public class Game {
+
   //This is the Game class.  It hold the current state of the game
   //with the help of the Cell class.
   
   public boolean finished = false;
   public boolean draw = false;
-  public Cell[] grid = new Cell[9];
-  public Cell[][] rows = new Cell[3][3];
-  public Cell[][] columns = new Cell[3][3];
-  public Cell[][] diagonals = new Cell[2][3];
+  public int gridSize;
   
-  public Game() {
+  private Cell[] grid;
+  
+  //constructor.  takes integer and generates a new Game with given size
+  public Game(int size) {
+  
+    this.gridSize = size;
+    grid = new Cell[gridSize * gridSize];
+    
     for (int i = 0; i < grid.length; i++) {
-    grid[i] = new Cell();
-    //System.out.println(grid[i].output());
-  }
+    
+      grid[i] = new Cell();
+      
+    }
+    
   }
   
+  //checks to see if a win condition has been met and
+  //outputs the current game map to the console 
   public String output() {
   
-    //Cell[] grid = new Cell[9];
-    String map = "Map goes here.";
+    checkForTicTacToe();
+    return drawMap(); 
     
-    if(checkForTicTacToe()){
-      //draw winning map
-      map = "\n\t\t  1   2   3\n";
-      map += "\t\t    |   |   \n";
-      map += "\t\tA " + grid[0].output() + " | " + grid[1].output() + " | " + grid[2].output() + " \n";
-      map += "\t\t    |   |   \n";
-      map += "\t\t ---+---+---\n";
-      map += "\t\t    |   |   \n";
-      map += "\t\tB " + grid[3].output() + " | " + grid[4].output() + " | " + grid[5].output() + " \n";
-      map += "\t\t    |   |   \n";
-      map += "\t\t ---+---+---\n";
-      map += "\t\t    |   |   \n";
-      map += "\t\tC " + grid[6].output() + " | " + grid[7].output() + " | " + grid[8].output() + " \n";
-      map += "\t\t    |   |   \n";
-    } else {
-      
-      // Ideal sort of output
-      /*
-      map  = "\\  |   |   \n";
-      map += " X |   |   \n";
-      map += "  \\|   |   \n";
-      map += "-----------\n";
-      map += "   |\\  |   \n";
-      map += "   | X | O \n";
-      map += "   |  \\|   \n";
-      map += "-----------\n";
-      map += "   |   |\\  \n";
-      map += "   | O | X \n";
-      map += "   |   |  \\\n";
-      */
-      
-      // Hardcoded ouput for 3x3 game
-
-      map = "\n\t\t  1   2   3\n";
-      map += "\t\t    |   |   \n";
-      map += "\t\tA " + grid[0].output() + " | " + grid[1].output() + " | " + grid[2].output() + " \n";
-      map += "\t\t    |   |   \n";
-      map += "\t\t ---+---+---\n";
-      map += "\t\t    |   |   \n";
-      map += "\t\tB " + grid[3].output() + " | " + grid[4].output() + " | " + grid[5].output() + " \n";
-      map += "\t\t    |   |   \n";
-      map += "\t\t ---+---+---\n";
-      map += "\t\t    |   |   \n";
-      map += "\t\tC " + grid[6].output() + " | " + grid[7].output() + " | " + grid[8].output() + " \n";
-      map += "\t\t    |   |   \n";
-
-    }
-    return map;
   }
   
-  public boolean setCell(int index){ //This is terrible.  I need to make a player class
-    if (grid[index].empty) {         //that keeps track of whose turn it is
-      grid[index].placeX();
-      return true;
-    } else {
-      return false;
-    }
-  }
-  public boolean setCellO(int index){
+  //places an X or an O in a cell ont he game map
+  public boolean setCell(int index){
+  
     if (grid[index].empty) {
-      grid[index].placeO();
+    
+      grid[index].placeMark();
       return true;
+      
     } else {
+    
       return false;
+      
     }
+    
   }
   
+  //checks to see if a win condition has been met
   private boolean checkForTicTacToe() {
   
-    if(!grid[0].empty && !grid[1].empty && !grid[2].empty && !grid[3].empty && !grid[4].empty && !grid[5].empty && !grid[6].empty && !grid[7].empty && !grid[8].empty){
+    boolean gridFilled;
+    boolean rowWin;
+    boolean columnWin;
+    boolean diagonalWin;
+    
+    Cell[][] rows = new Cell[gridSize][gridSize];
+    Cell[][] columns = new Cell[gridSize][gridSize];
+    Cell[][] diagonals = new Cell[2][gridSize]; //there are only ever two diagonals which complete a tictactoe in a square
+    
+    //if every cell is filled, end the game
+    gridFilled = true;
+    for(int i = 0; i < gridSize * gridSize; i++){
+    
+      if(grid[i].empty){
+      
+        gridFilled = false;
+        
+      }
+      
+    }
+    
+    if(gridFilled){
+    
       finished = true;
       draw = true;
-    } else {
-      for(int i=0;i<3;i+=1){ //all these 3's replace with gridSize later
-        for(int j=0;j<3;j+=1){
-          rows[i][j] = grid[3*i+j];
-        }
-      }
-      for(int i=0;i<3;i+=1){
-        for(int j=0;j<3;j+=1){
-          columns[i][j] = grid[i+3*j];
-        }
-      }
-      diagonals[0][0] = grid[0]; //increment of size+1
-      diagonals[0][1] = grid[4]; //increment of size+1
-      diagonals[0][2] = grid[8]; //increment of size+1
-      diagonals[1][0] = grid[2]; //increment of size-1
-      diagonals[1][1] = grid[4]; //increment of size-1
-      diagonals[1][2] = grid[6]; //increment of size-1
       
-      for (Cell[] row : rows) {
-        //if the row elements are all the same and not empty
-        //set finished to true
-        //System.out.println(row.toString());
-        if(row[0].output()==row[1].output() && row[1].output()==row[2].output() && !row[0].empty && !row[1].empty && !row[2].empty) {
-          finished = true;
-        }
-        
-          //System.out.println(row.toString());
-        for (Cell element : row){
-          //System.out.println(element);
-        }
-      }
-      for (Cell[] column : columns) {
-        //if the column elements are all the same and not empty
-        //set finished to true
-        //System.out.println(column.toString());
-        if(column[0].output()==column[1].output() && column[1].output()==column[2].output() && !column[0].empty && !column[1].empty && !column[2].empty) {
-          finished = true;
-        }
-        
-          //System.out.println(column.toString());
-        for (Cell element : column){
-          //System.out.println(element);
-        }
-      }
-      for (Cell[] diagonal : diagonals) {
-        //if the diagonal elements are all the same and not empty
-        //set finished to true
-        //System.out.println(diagonal.toString());
-        if(diagonal[0].output()==diagonal[1].output() && diagonal[1].output()==diagonal[2].output() && !diagonal[0].empty && !diagonal[1].empty && !diagonal[2].empty) {
-          finished = true;
-        }
-        
-          //System.out.println(diagonal.toString());
-        for (Cell element : diagonal){
-          //System.out.println(element);
-        }
-      }
     }
+    
+    for(int i = 0; i < gridSize; i++){
+    
+      for(int j = 0; j < gridSize; j++){
+      
+        rows[i][j] = grid[gridSize*i+j];
+        
+      }
+      
+    }
+    
+    for(int i = 0; i < gridSize; i++){
+    
+      for(int j = 0; j < gridSize; j++){
+      
+        columns[i][j] = grid[i+gridSize*j];
+        
+      }
+      
+    }
+    
+    for(int i = 0; i < 2; i++){
+    
+      if(i == 0){
+      
+        for(int j = 0; j < gridSize; j++){
+        
+          diagonals[i][j] = grid[(gridSize + 1) * j];
+          
+        }
+        
+      } else {
+      
+        for(int j = 0; j < gridSize; j++){
+        
+          diagonals[i][j] = grid[(gridSize - 1) * (j + 1)];
+          
+        }
+        
+      }
+      
+    }
+    
+    //if a row has all the same content and isnt empty
+    //then the game is over
+    for (Cell[] row : rows) {
+    
+      //if the row elements are all the same and not empty
+      //set finished to true
+      rowWin = true;
+      for(int i = 0; i < row.length - 1; i++) {
+      
+        if(row[i].output()!=row[i + 1].output()){
+        
+          rowWin = false;
+          
+        }
+        
+        for(int j = 0; j < row.length - 1; j++){
+        
+          if(row[i].empty){
+          
+            rowWin = false;
+            
+          }
+          
+        }
+        
+      }
+      
+      if(rowWin){
+      
+        finished = true;
+        draw = false;
+        
+      }
+      
+    }
+    
+    //if a column has all the same content and isnt empty
+    //then the game is over
+    for (Cell[] column : columns) {
+    
+      //if the column elements are all the same and not empty
+      //set finished to true
+      columnWin = true;
+      for(int i = 0; i < column.length - 1; i++) {
+      
+        if(column[i].output()!=column[i + 1].output()) {
+        
+          columnWin = false;
+          
+        }
+        
+        for(int j = 0; j < column.length - 1; j++) {
+        
+          if(column[i].empty){
+          
+            columnWin = false;
+            
+          }
+          
+        }
+        
+      }
+      
+      if(columnWin){
+      
+        finished = true;
+        draw = false;
+        
+      }
+      
+    }
+    
+    //if a diagonal has all the same content and isnt empty
+    //then the game is over
+    for (Cell[] diagonal : diagonals) {
+    
+      //if the diagonal elements are all the same and not empty
+      //set finished to true
+      
+      diagonalWin = true;
+      for(int i = 0; i < diagonal.length - 1; i++) {
+      
+        if(diagonal[i].output()!=diagonal[i + 1].output()) {
+        
+          diagonalWin = false;
+          
+        }
+        
+        for(int j = 0; j < diagonal.length - 1; j++) {
+        
+          if(diagonal[i].empty){
+          
+            diagonalWin = false;
+            
+          }
+          
+        }
+        
+      }
+      
+      if(diagonalWin){
+      
+        finished = true;
+        draw = false;
+        
+      }
+      
+    }
+    
     return finished;
+    
+  }
+  
+  //draws the current game state in perfect proportion
+  //
+  private String drawMap() {
+  
+  String top = "\t\t  ";
+  String fill = "\t\t    ";
+  String divider = "\t\t ---";
+  String meat = "\t\t";
+  String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  String map = "\n";
+  
+    for(int i = 1; i < gridSize; i++) {
+    
+      top += i + "  ";
+      
+      if(i<9){
+      
+        top += " ";
+        
+      }
+      
+      fill += "|   ";
+      divider += "+---";
+      
+    }
+    
+    top += gridSize + " \n";
+    fill += "\n";
+    divider += "\n";
+    
+    map += top + fill;
+    
+    for(int row = 1; row < 2; row++){
+    
+      for(int column = 1; column < 2; column++){
+      
+        meat += alphabet.substring(row - 1, row) + " " + grid[3 * (row - 1) + (column - 1)].output();
+        
+        for(int i = 2; i < gridSize + 1; i++){
+        
+          meat += " | " + grid[3 * (row - 1) + (i - 1)].output();
+          
+        }
+        
+      }
+      
+      meat += "\n";
+      
+    }
+    
+    map += meat + fill;
+    
+    for (int row = 2; row < gridSize + 1; row++){
+    
+      map += divider;
+      map += fill;
+      
+      for(int column = 1; column < 2; column++){
+      
+        meat = "\t\t" + alphabet.substring(row - 1, row) + " " + grid[gridSize * (row - 1) + (column - 1)].output();
+        
+        for(int i = column + 1; i < gridSize + 1; i++){
+        
+          meat += " | " + grid[gridSize * (row - 1) + (i - 1)].output();
+          
+        }
+        
+      }
+      
+      map += meat + "\n" + fill;
+      
+    }
+    
+    return map;
+    
   }
   
 }

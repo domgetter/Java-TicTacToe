@@ -1,4 +1,5 @@
 public class Cell {
+
   //This is one cell of the game grid
   
   public String contents;
@@ -13,13 +14,12 @@ public class Cell {
     return this.contents;
   }
   
-  public void placeX() {
-    this.contents = "X";
-    this.empty = false;
-  }
-  
-  public void placeO() {
-    this.contents = "O";
+  public void placeMark() {
+    if(TicTacToe.count%2==0){
+      this.contents = "X";
+    } else {
+      this.contents = "O";
+    }
     this.empty = false;
   }
   
