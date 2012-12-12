@@ -16,20 +16,15 @@ public class Game {
     grid = new Cell[gridSize * gridSize];
     
     for (int i = 0; i < grid.length; i++) {
-    
       grid[i] = new Cell();
-      
     }
-    
   }
   
   //checks to see if a win condition has been met and
   //outputs the current game map to the console 
   public String output() {
-  
     checkForTicTacToe();
-    return drawMap(); 
-    
+    return drawMap();
   }
   
   //places an X or an O in a cell ont he game map
@@ -41,11 +36,8 @@ public class Game {
       return true;
       
     } else {
-    
       return false;
-      
     }
-    
   }
   
   //checks to see if a win condition has been met
@@ -65,60 +57,42 @@ public class Game {
     for(int i = 0; i < gridSize * gridSize; i++){
     
       if(grid[i].empty){
-      
         gridFilled = false;
-        
       }
-      
     }
     
     if(gridFilled){
-    
       finished = true;
       draw = true;
-      
     }
     
     for(int i = 0; i < gridSize; i++){
-    
       for(int j = 0; j < gridSize; j++){
       
         rows[i][j] = grid[gridSize*i+j];
-        
       }
-      
     }
     
     for(int i = 0; i < gridSize; i++){
-    
       for(int j = 0; j < gridSize; j++){
       
         columns[i][j] = grid[i+gridSize*j];
-        
       }
-      
     }
     
     for(int i = 0; i < 2; i++){
-    
       if(i == 0){
-      
         for(int j = 0; j < gridSize; j++){
         
           diagonals[i][j] = grid[(gridSize + 1) * j];
           
         }
-        
       } else {
-      
         for(int j = 0; j < gridSize; j++){
         
           diagonals[i][j] = grid[(gridSize - 1) * (j + 1)];
-          
         }
-        
       }
-      
     }
     
     //if a row has all the same content and isnt empty
@@ -129,32 +103,22 @@ public class Game {
       //set finished to true
       rowWin = true;
       for(int i = 0; i < row.length - 1; i++) {
-      
         if(row[i].output()!=row[i + 1].output()){
         
           rowWin = false;
-          
         }
-        
         for(int j = 0; j < row.length - 1; j++){
-        
           if(row[i].empty){
           
             rowWin = false;
-            
           }
-          
         }
-        
       }
       
       if(rowWin){
-      
         finished = true;
         draw = false;
-        
       }
-      
     }
     
     //if a column has all the same content and isnt empty
@@ -165,32 +129,23 @@ public class Game {
       //set finished to true
       columnWin = true;
       for(int i = 0; i < column.length - 1; i++) {
-      
         if(column[i].output()!=column[i + 1].output()) {
         
           columnWin = false;
-          
         }
         
         for(int j = 0; j < column.length - 1; j++) {
-        
           if(column[i].empty){
           
             columnWin = false;
-            
           }
-          
         }
-        
       }
       
       if(columnWin){
-      
         finished = true;
         draw = false;
-        
       }
-      
     }
     
     //if a diagonal has all the same content and isnt empty
@@ -202,36 +157,26 @@ public class Game {
       
       diagonalWin = true;
       for(int i = 0; i < diagonal.length - 1; i++) {
-      
         if(diagonal[i].output()!=diagonal[i + 1].output()) {
         
           diagonalWin = false;
-          
         }
         
         for(int j = 0; j < diagonal.length - 1; j++) {
-        
           if(diagonal[i].empty){
           
             diagonalWin = false;
-            
           }
-          
         }
-        
       }
       
       if(diagonalWin){
-      
         finished = true;
         draw = false;
-        
       }
-      
     }
     
     return finished;
-    
   }
   
   //draws the current game state in perfect proportion
@@ -250,24 +195,19 @@ public class Game {
       top += i + "  ";
       
       if(i<9){
-      
         top += " ";
-        
       }
       
       fill += "|   ";
       divider += "+---";
-      
     }
     
     top += gridSize + " \n";
     fill += "\n";
     divider += "\n";
-    
     map += top + fill;
     
     for(int row = 1; row < 2; row++){
-    
       for(int column = 1; column < 2; column++){
       
         meat += alphabet.substring(row - 1, row) + " " + grid[3 * (row - 1) + (column - 1)].output();
@@ -275,13 +215,10 @@ public class Game {
         for(int i = 2; i < gridSize + 1; i++){
         
           meat += " | " + grid[3 * (row - 1) + (i - 1)].output();
-          
         }
-        
       }
       
       meat += "\n";
-      
     }
     
     map += meat + fill;
@@ -298,17 +235,12 @@ public class Game {
         for(int i = column + 1; i < gridSize + 1; i++){
         
           meat += " | " + grid[gridSize * (row - 1) + (i - 1)].output();
-          
         }
-        
       }
       
       map += meat + "\n" + fill;
-      
     }
     
     return map;
-    
   }
-  
 }
